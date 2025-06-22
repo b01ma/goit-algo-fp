@@ -24,7 +24,10 @@ ax.axis('off')
 x0, y0 = 0, 0
 initial_length = 100
 initial_angle = np.pi / 2  # вертикально вгору
-recursion_depth = 7
+recursion_depth = int(input('Depth level, from 1 to 10: ')) 
+
+while recursion_depth <= 0 or recursion_depth > 10:
+    recursion_depth = int(input('Please provide a level from 1 to 10: '))
 
 draw_branch(x0, y0, initial_length, initial_angle, recursion_depth, ax)
 plt.show()
