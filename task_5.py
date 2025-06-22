@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import uuid
+from collections import deque
 
 
 class Node:
@@ -58,6 +59,24 @@ def dfs_colored(root):
             stack.append(node.left)
     return visited
 
+def bfs_colored(root):
+    if not root:
+        return []
+
+    queue = deque([root])
+    visited = []
+
+    while queue:
+        node = queue.popleft()
+        visited.append(node)
+
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+
+    return visited
+
 
 def draw_dfs_colored(root):
     visited_nodes = dfs_colored(root)
@@ -72,9 +91,28 @@ def draw_dfs_colored(root):
     node_colors = [data["color"] for _, data in tree.nodes(data=True)]
     labels = {node: data["label"] for node, data in tree.nodes(data=True)}
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(10, 6), num="DFS Traversal")
     nx.draw(tree, pos=pos, labels=labels, arrows=False, node_size=2000, node_color=node_colors, font_size=12)
     plt.title("DFS Tree Traversal (Color Gradient from Dark to Light)")
+    plt.axis("off")
+    plt.show()
+
+def draw_bfs_colored(root):
+    visited_nodes = bfs_colored(root)
+    colors = hex_color_gradient("#003366", "#99ccff", len(visited_nodes))
+    for node, color in zip(visited_nodes, colors):
+        node.color = color
+
+    tree = nx.DiGraph()
+    pos = {root.id: (0, 0)}
+    tree = add_edges(tree, root, pos)
+
+    node_colors = [data["color"] for _, data in tree.nodes(data=True)]
+    labels = {node: data["label"] for node, data in tree.nodes(data=True)}
+
+    plt.figure(figsize=(10, 6), num="BFS Traversal")
+    nx.draw(tree, pos=pos, labels=labels, arrows=False, node_size=2000, node_color=node_colors, font_size=12)
+    plt.title("BFS Tree Traversal (Color Gradient from Dark to Light)")
     plt.axis("off")
     plt.show()
 
@@ -89,3 +127,4 @@ root.right.left = Node(50)
 root.right.right = Node(60)
 
 draw_dfs_colored(root)
+draw_bfs_colored(root)
